@@ -7,18 +7,18 @@ All versions are supported! (Might change in the future)
 ![Preview of Usage](Usage.png)
  
 ## Converting
-__Repacking PKG to Zip!__
+**Repacking PKG to Zip!**
 ![Preview of Repacking PKG to Zip!](PKGtoZip.png)
 
-__Repacking result!__
+**Repacking result!**
 ![Preview of Repacked Zip!](RepackedZip.png)
 
-__And back from zip to pkg!__
+**And back from zip to pkg!**
 ![Preview of Repacked Zip!](ZiptoPKG.png)
 
-__Easily as never!__
+**Easily as never!**
  
 ## Important information
-__The program was created for educational purposes.__
+**The program was created for educational purposes.**
 
-__Files in .pkg files may be copyrighted.__
+**Files in .pkg files may be copyrighted.**
