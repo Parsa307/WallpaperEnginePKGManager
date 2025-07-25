@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.IO.Compression;
 
-namespace Wallpaper_Engine_Pkg_To_Zip
+namespace WallpaperEnginePKGtoZip
 {
     public class PkgConverter
     {
@@ -85,10 +85,10 @@ namespace Wallpaper_Engine_Pkg_To_Zip
             if (string.IsNullOrEmpty(_pkgInfo.Signature))
             {
                 _pkgInfo.Signature = "PKGV0001";
-                Console.WriteLine($"PkgVersion: not detected, will be used \"PKGV0001\"");
+                Console.WriteLine($"PKGVersion: not detected, will be used \"PKGV0001\"");
             }
             else
-                Console.WriteLine($"PkgVersion: \"{_pkgInfo.Signature}\"");
+                Console.WriteLine($"PKGVersion: \"{_pkgInfo.Signature}\"");
                 
                
             _pkgInfo.FilePath = Path.GetFileName(_pkgFileStream.Name);
@@ -183,11 +183,11 @@ namespace Wallpaper_Engine_Pkg_To_Zip
 
                 if (!_pkgInfo.Signature.StartsWith("PKGV")) //Check its PKG file?
                     throw new PkgConverterException(new InvalidDataException(_pkgInfo.Signature), Error.INVALID_PKG_FILE_SIGNATURE);
-                else if ((_pkgInfo.Signature != "PKGV0001") && (_pkgInfo.Signature != "PKGV0002")) //It supported version?
+                else if ((_pkgInfo.Signature != "PKGV0001") && (_pkgInfo.Signature != "PKGV0002") && (_pkgInfo.Signature != "PKGV0021")) //It supported version?
                 {
                     var savedColor = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"PkgVersion: {_pkgInfo.Signature} - not supported!");
+                    Console.WriteLine($"PKGVersion: {_pkgInfo.Signature} - not supported!");
                     Console.ForegroundColor = savedColor;
                 }
                 else
@@ -280,7 +280,7 @@ namespace Wallpaper_Engine_Pkg_To_Zip
                 string comment = _zipArchive.GetComment(Encoding.UTF8);
                 if (comment != "")
                 {
-                    string findSignature = "│ PkgVersion: ";
+                    string findSignature = "│ PKGVersion: ";
                     int pkgVersionIndex = comment.IndexOf(findSignature) + findSignature.Length;
                     if (pkgVersionIndex > 0)
                         return comment.Substring(pkgVersionIndex, 8);
@@ -315,15 +315,15 @@ namespace Wallpaper_Engine_Pkg_To_Zip
             Console.ForegroundColor = ConsoleColor.Gray;
             if (_pkgToZip)
             {
-                Console.WriteLine($"Reading pkg: {_pkgInfo.FilePath}");
+                Console.WriteLine($"Reading PKG: {_pkgInfo.FilePath}");
 
                 try
                 {
                     ReadPkgInfo(); //Read pkg
                 }
-                catch (PkgConverterException ex) //Rethrown converter exception
+                catch (PkgConverterException) //Rethrown converter exception
                 {
-                    throw ex;
+                    throw;
                 }
                 catch (Exception ex) //Not converter exception
                 {
@@ -340,9 +340,9 @@ namespace Wallpaper_Engine_Pkg_To_Zip
                 {
                     PkgToZip();
                 }
-                catch (PkgConverterException ex) //Rethrown converter exception
+                catch (PkgConverterException) //Rethrown converter exception
                 {
-                    throw ex;
+                    throw;
                 }
                 catch (Exception ex) //Not converter exception
                 {
@@ -356,7 +356,7 @@ namespace Wallpaper_Engine_Pkg_To_Zip
 
                 //Says successfully results
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"\nPkg to Zip repackaged successfully");
+                Console.WriteLine($"\nPKG to Zip repackaged successfully");
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
 
@@ -369,9 +369,9 @@ namespace Wallpaper_Engine_Pkg_To_Zip
                 {
                     CreatePkgInfoFromZip(); //Create PkgInfo from zip
                 }
-                catch (PkgConverterException ex) //Rethrown converter exception
+                catch (PkgConverterException) //Rethrown converter exception
                 {
-                    throw ex;
+                    throw;
                 }
                 catch (Exception ex) //Not converter exception
                 {
@@ -388,9 +388,9 @@ namespace Wallpaper_Engine_Pkg_To_Zip
                 {
                     ZipToPkg();
                 }
-                catch (PkgConverterException ex) //Rethrown converter exception
+                catch (PkgConverterException) //Rethrown converter exception
                 {
-                    throw ex;
+                    throw;
                 }
                 catch (Exception ex) //Not converter exception
                 {
@@ -404,7 +404,7 @@ namespace Wallpaper_Engine_Pkg_To_Zip
 
                 //Says successfully results
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"\nZip to Pkg repackaged successfully!");
+                Console.WriteLine($"\nZip to PKG repackaged successfully!");
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
         }

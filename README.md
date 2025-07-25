@@ -1,7 +1,7 @@
-# Wallpaper Engine Pkg to Zip and back!
+# Wallpaper Engine PKG to Zip and back!
 Simple program to convert the Wallpaper Engine Pkg files to Zip and back!
 
-Supported version of pkg's: "PKGV0001", "PKGV0002"
+Supported version of PKGS's: "PKGV0001", "PKGV0002", "PKGV0021"
 
  
 

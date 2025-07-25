@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Wallpaper_Engine_Pkg_To_Zip
+namespace WallpaperEnginePKGtoZip
 {
     public class PkgInfo
     {

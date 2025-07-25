@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.IO.Compression;
 
-namespace Wallpaper_Engine_Pkg_To_Zip
+namespace WallpaperEnginePKGtoZip
 {
     public static class ZipArchiveExtensions
     {
