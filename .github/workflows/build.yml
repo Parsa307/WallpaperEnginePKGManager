@@ -48,17 +48,10 @@ jobs:
         id: commit
         run: |
           DATE=$(date +'%Y-%m-%d_%H-%M')
-          HISTORY=$(git log --pretty=format:"%h %s")
-          MSG=$(git log -1 --pretty=%s)
-          HASH=$(git rev-parse --short=7 HEAD)
-
-          NOTES=$(printf "Release date: %s\n%s\n%s (%s)\n" "$DATE" "$HISTORY" "$MSG" "$HASH")
+          NOTES=$(printf "Release date: %s\n" "$DATE")
 
           echo "tag=$DATE" >> $GITHUB_OUTPUT
-          echo "title=$MSG" >> $GITHUB_OUTPUT
-          echo -e "notes<<EOF" >> $GITHUB_OUTPUT
-          echo "$NOTES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "notes=$NOTES" >> $GITHUB_OUTPUT
 
       - name: 📦 Download All Artifacts
         uses: actions/download-artifact@v4
