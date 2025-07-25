@@ -22,19 +22,15 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: 📦 Publish App
-        run: >
-          dotnet publish
-          --configuration Release
-          /p:PublishSingleFile=true
-          -p:PlatformTarget=${{ matrix.arch }}
-          -o build-${{ matrix.os }}-${{ matrix.arch }}
+      - name: 🛠 Build App
+        run: |
+          dotnet build --configuration Release -p:PlatformTarget=${{ matrix.arch }}
 
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}-${{ matrix.arch }}
-          path: build-${{ matrix.os }}-${{ matrix.arch }}
+          path: ${{ github.workspace }}/bin/Release/net8.0
 
   release:
     name: 🚀 Create Latest GitHub Release
@@ -50,10 +46,8 @@ jobs:
         run: |
           DATE=$(date +'%Y-%m-%d_%H-%M')
           MSG=$(git log -1 --pretty=%B | head -n1 | sed 's/"/\\"/g')
-          # Full commit history (hash + message), limit last 20 commits (change as needed)
           HISTORY=$(git log -20 --pretty=format:"%h %s" | sed 's/"/\\"/g')
 
-          # Compose release notes content
           NOTES="Release date: ${DATE}\n\n${MSG}\n\nFull commit history:\n${HISTORY}"
 
           echo "tag=${DATE}" >> $GITHUB_OUTPUT
@@ -65,6 +59,26 @@ jobs:
         with:
           path: all_builds
 
+      - name: 📦 Archive Linux x64 Build
+        run: |
+          cd all_builds
+          zip -r ../WallpaperEnginePKGtoZip_linux_x64.zip build-ubuntu-latest-x64
+
+      - name: 📦 Archive Linux x86 Build
+        run: |
+          cd all_builds
+          zip -r ../WallpaperEnginePKGtoZip_linux_x86.zip build-ubuntu-latest-x86
+
+      - name: 📦 Archive Windows x64 Build
+        run: |
+          cd all_builds
+          zip -r ../WallpaperEnginePKGtoZip_windows_x64.zip build-windows-latest-x64
+
+      - name: 📦 Archive Windows x86 Build
+        run: |
+          cd all_builds
+          zip -r ../WallpaperEnginePKGtoZip_windows_x86.zip build-windows-latest-x86
+
       - name: 🚀 Create Release on GitHub
         uses: softprops/action-gh-release@v2
         with:
@@ -72,5 +86,8 @@ jobs:
           name: ${{ steps.commit.outputs.title }}
           body: ${{ steps.commit.outputs.notes }}
           files: |
-            all_builds/**/*
+            WallpaperEnginePKGtoZip_linux_x64.zip
+            WallpaperEnginePKGtoZip_linux_x86.zip
+            WallpaperEnginePKGtoZip_windows_x64.zip
+            WallpaperEnginePKGtoZip_windows_x86.zip
 
