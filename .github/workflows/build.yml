@@ -48,11 +48,13 @@ jobs:
           MSG=$(git log -1 --pretty=%B | head -n1 | sed 's/"/\\"/g')
           HISTORY=$(git log -20 --pretty=format:"%h %s" | sed 's/"/\\"/g')
 
-          NOTES="Release date: ${DATE}\n\n${MSG}\n\nFull commit history:\n${HISTORY}"
+          NOTES=$(printf "Release date: %s\n\n%s\n\nFull commit history:\n%s\n" "$DATE" "$MSG" "$HISTORY")
 
-          echo "tag=${DATE}" >> $GITHUB_OUTPUT
-          echo "title=${MSG}" >> $GITHUB_OUTPUT
-          echo "notes=${NOTES}" >> $GITHUB_OUTPUT
+          echo "tag=$DATE" >> $GITHUB_OUTPUT
+          echo "title=$MSG" >> $GITHUB_OUTPUT
+          echo -e "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: 📦 Download All Artifacts
         uses: actions/download-artifact@v4
