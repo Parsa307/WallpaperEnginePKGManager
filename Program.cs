@@ -21,16 +21,17 @@ namespace WallpaperEnginePKGtoZip
                 Environment.Exit(1);
             }
 
-            string pkg = args[1];
-            string zip = args[2];
-
             PKGConverter converter = null;
 
             bool convertToZip;
+            string pkg = null;
+            string zip = null;
 
             if (args[0].ToLower() == "--pkgtozip")
             {
                 convertToZip = true;
+                pkg = args[1];
+                zip = args[2];
             }
             else if (args[0].ToLower() == "--ziptopkg")
             {
