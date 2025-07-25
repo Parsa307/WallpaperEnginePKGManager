@@ -211,7 +211,7 @@ namespace WallpaperEnginePKGtoZip
         }
 
 
-        public void PkgToZip()
+        public void PKGtoZip()
         {
             //Set signature of pkg to zip comment
             SetSignatureToZip();
@@ -333,7 +333,7 @@ namespace WallpaperEnginePKGtoZip
 
                 try
                 {
-                    PkgToZip();
+                    PKGtoZip();
                 }
                 catch (PKGConverterException) //Rethrown converter exception
                 {
