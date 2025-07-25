@@ -48,7 +48,7 @@ jobs:
           MSG=$(git log -1 --pretty=%B | head -n1 | sed 's/"/\\"/g')
           HASH=$(git rev-parse --short=7 HEAD)
 
-          NOTES=$(printf "Release date: %s\n\n%s\n\nFull commit history:\n%s\n" "$DATE" "$MSG" "$MSG" "$HISTORY")
+          NOTES=$(printf "Release date: %s\n\n%s\n\n%s (%s)\n" "$DATE" "$MSG" "$HASH")
 
           echo "tag=$DATE" >> $GITHUB_OUTPUT
           echo "title=$MSG" >> $GITHUB_OUTPUT
