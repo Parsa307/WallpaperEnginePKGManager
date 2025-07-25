@@ -74,7 +74,7 @@ namespace WallpaperEnginePKGtoZip
             }
         }
 
-        private void CreatePkgInfoFromZip()
+        private void CreatePKGInfoFromZip()
         {
             //Detecting original version of file
             _pkgInfo.Signature = DetectSignatureFromZip(); 
@@ -166,7 +166,7 @@ namespace WallpaperEnginePKGtoZip
             }
         }
 
-        private void ReadPkgInfo()
+        private void ReadPKGInfo()
         {
             using (var br = new BinaryReader(_pkgFileStream, Encoding.UTF8, true))
             {
@@ -203,7 +203,7 @@ namespace WallpaperEnginePKGtoZip
         public void PKGtoZip()
         {
             //Set signature of pkg to zip comment
-            SetSignatureToZip();
+            SetSignaturetoZip();
 
             int filesPacked = 0;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -283,7 +283,7 @@ namespace WallpaperEnginePKGtoZip
         }
 
 
-        public void SetSignatureToZip()
+        public void SetSignaturetoZip()
         {
             string pkgVersion = $"                  ┌──────────────────────┐\n                  │ PKGVersion: {_pkgInfo.Signature} │\n                  ╘══════════════════════╛";
             _zipArchive.SetComment($"{Program.ZipComment}\n{pkgVersion}", Encoding.UTF8);
@@ -301,7 +301,7 @@ namespace WallpaperEnginePKGtoZip
 
                 try
                 {
-                    ReadPkgInfo(); //Read pkg
+                    ReadPKGInfo(); //Read pkg
                 }
                 catch (PKGConverterException) //Rethrown converter exception
                 {
@@ -349,7 +349,7 @@ namespace WallpaperEnginePKGtoZip
 
                 try
                 {
-                    CreatePkgInfoFromZip(); //Create PkgInfo from zip
+                    CreatePKGInfoFromZip(); //Create PkgInfo from zip
                 }
                 catch (PKGConverterException) //Rethrown converter exception
                 {

@@ -45,10 +45,11 @@ jobs:
         id: commit
         run: |
           DATE=$(date +'%Y-%m-%d_%H-%M')
-          MSG=$(git log -1 --pretty=%B | head -n1 | sed 's/"/\\"/g')
+          HISTORY=$(git log --pretty=format:"%h %s")
+          MSG=$(git log -1 --pretty=%s)
           HASH=$(git rev-parse --short=7 HEAD)
 
-          NOTES=$(printf "Release date: %s\n%s (%s)\n" "$DATE" "$MSG" "$HASH")
+          NOTES=$(printf "Release date: %s\n%s\n%s (%s)\n" "$DATE" "$HISTORY" "$MSG" "$HASH")
 
           echo "tag=$DATE" >> $GITHUB_OUTPUT
           echo "title=$MSG" >> $GITHUB_OUTPUT
