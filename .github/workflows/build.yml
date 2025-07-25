@@ -1,0 +1,68 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }} - ${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        arch: [x64, x86]
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🧰 Setup .NET 8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 📦 Publish App
+        run: >
+          dotnet publish
+          --configuration Release
+          -p:PlatformTarget=${{ matrix.arch }}
+          -o build-${{ matrix.os }}-${{ matrix.arch }}
+
+      - name: 📤 Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.os }}-${{ matrix.arch }}
+          path: build-${{ matrix.os }}-${{ matrix.arch }}
+
+  release:
+    name: 🚀 Create Latest GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
+
+      - name: 🔍 Get Commit Info
+        id: commit
+        run: |
+          MSG=$(git log -1 --pretty=%s)
+          HASH=$(git rev-parse --short=7 HEAD)
+          DATE=$(date +'%Y-%m-%d_%H-%M')
+          echo "tag=${DATE}" >> $GITHUB_OUTPUT
+          echo "title=${MSG} (${HASH})" >> $GITHUB_OUTPUT
+
+      - name: 📦 Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all_builds
+
+      - name: 🚀 Create Release on GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.commit.outputs.tag }}
+          name: ${{ steps.commit.outputs.title }}
+          files: |
+            all_builds/**/*
+
