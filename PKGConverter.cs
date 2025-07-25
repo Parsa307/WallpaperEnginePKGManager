@@ -176,14 +176,8 @@ namespace WallpaperEnginePKGtoZip
 
                 if (!_pkgInfo.Signature.StartsWith("PKGV")) //Check its PKG file?
                     throw new PKGConverterException(new InvalidDataException(_pkgInfo.Signature), Error.INVALID_PKG_FILE_SIGNATURE);
-                else if ((_pkgInfo.Signature != "PKGV0001") && (_pkgInfo.Signature != "PKGV0002") && (_pkgInfo.Signature != "PKGV0021")) //It supported version?
-                {
-                    var savedColor = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"PKGVersion: {_pkgInfo.Signature} - not supported!");
-                    Console.ForegroundColor = savedColor;
-                }
-                else
+
+                    //Log the PKG Version
                     Console.WriteLine($"PKGVersion: {_pkgInfo.Signature}");
 
                 //Read a file count in package
