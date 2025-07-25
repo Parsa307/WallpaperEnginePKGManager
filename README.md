@@ -19,6 +19,6 @@ __And back from zip to pkg!__
 __Easily as never!__
  
 ## Important information
-__The program was created for introductory purposes.__
+__The program was created for educational purposes.__
 
 __Files in .pkg files may be copyrighted.__
