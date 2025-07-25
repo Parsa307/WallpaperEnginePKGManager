@@ -237,7 +237,7 @@ namespace WallpaperEnginePKGtoZip
                     }
 
 
-                    if (readedCount != file.Lenght) //Кидаемься молотком, если вдруг насокячили с чтением
+                    if (readedCount != file.Lenght) //Throw a Exception if reading went wrong
                         throw new PKGConverterException(new ArgumentOutOfRangeException($"File lenght: {file.Lenght}, but readed: {readedCount}"), Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT);
 
 
