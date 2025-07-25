@@ -117,10 +117,10 @@ namespace WallpaperEnginePKGtoZip
             //Usage for the user!
             string exeName = Process.GetCurrentProcess().ProcessName;
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"Usage: {exeName} [mode] [pkgFile] [zipFile]");
-            Console.WriteLine("pkgFile - Wallpaper Engine \".pkg\" file path");
-            Console.WriteLine("zipFile - Archive \".zip\" file path");
+            Console.WriteLine($"Convert PKG to Zip: {exeName} --pkgtozip [pkgFile] [zipFile]");
             Console.WriteLine($"Example: {exeName} --pkgtozip scene.pkg result.zip");
+            Console.WriteLine($"Convert Zip to PKG: {exeName} --ziptopkg [zipFile] [pkgFile]");
+            Console.WriteLine($"Example: {exeName} --ziptopkg result.zip scene.pkg");
             Environment.Exit(0);
         }
     }
