@@ -1,13 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using System.IO.Compression;
 
 namespace WallpaperEnginePKGtoZip
 {
-    public class PkgConverter
+    public class PKGConverter
     {
-        private PkgInfo _pkgInfo;
+        private PKGInfo _pkgInfo;
         private FileStream _pkgFileStream;
         private FileStream _zipFileStream;
         private ZipArchive _zipArchive;
@@ -15,15 +13,15 @@ namespace WallpaperEnginePKGtoZip
         private bool _pkgToZip;
 
 
-        public PkgConverter(string pkgFilePath, string zipFilePath, bool pkgToZip)
+        public PKGConverter(string pkgFilePath, string zipFilePath, bool pkgToZip)
         {
             this._pkgToZip = pkgToZip;
             if (pkgToZip)
             {
                 if (!File.Exists(pkgFilePath)) //Check exists pkg file?
-                    throw new PkgConverterException(new FileNotFoundException(pkgFilePath), Error.PKG_FILE_NOT_FOUND);
+                    throw new PKGConverterException(new FileNotFoundException(pkgFilePath), Error.PKG_FILE_NOT_FOUND);
 
-                _pkgInfo = new PkgInfo(pkgFilePath);
+                _pkgInfo = new PKGInfo(pkgFilePath);
 
                 //Creating file streams
                 try
@@ -33,7 +31,7 @@ namespace WallpaperEnginePKGtoZip
                 }
                 catch (Exception ex)
                 {
-                    throw new PkgConverterException(ex, Error.FAILED_TO_CREATE_FILE_STREAM);
+                    throw new PKGConverterException(ex, Error.FAILED_TO_CREATE_FILE_STREAM);
                 }
 
                 //Create zip archive
@@ -43,15 +41,15 @@ namespace WallpaperEnginePKGtoZip
                 }
                 catch (Exception ex)
                 {
-                    throw new PkgConverterException(ex, Error.FAILED_TO_CREATE_ZIP_ARCHIVE);
+                    throw new PKGConverterException(ex, Error.FAILED_TO_CREATE_ZIP_ARCHIVE);
                 }
             }
             else
             {
                 if (!File.Exists(zipFilePath)) //Check exists pkg file?
-                    throw new PkgConverterException(new FileNotFoundException(zipFilePath), Error.ZIP_FILE_NOT_FOUND);
+                    throw new PKGConverterException(new FileNotFoundException(zipFilePath), Error.ZIP_FILE_NOT_FOUND);
 
-                _pkgInfo = new PkgInfo(pkgFilePath);
+                _pkgInfo = new PKGInfo(pkgFilePath);
 
                 //Creating file streams
                 try
@@ -61,7 +59,7 @@ namespace WallpaperEnginePKGtoZip
                 }
                 catch (Exception ex)
                 {
-                    throw new PkgConverterException(ex, Error.FAILED_TO_CREATE_FILE_STREAM);
+                    throw new PKGConverterException(ex, Error.FAILED_TO_CREATE_FILE_STREAM);
                 }
 
                 //Create zip archive
@@ -71,7 +69,7 @@ namespace WallpaperEnginePKGtoZip
                 }
                 catch (Exception ex)
                 {
-                    throw new PkgConverterException(ex, Error.FAILED_TO_OPEN_ZIP_ARCHIVE);
+                    throw new PKGConverterException(ex, Error.FAILED_TO_OPEN_ZIP_ARCHIVE);
                 }
             }
         }
@@ -103,13 +101,13 @@ namespace WallpaperEnginePKGtoZip
             int filesOffset = 0;
             foreach (var entry in _zipArchive.Entries)
             {
-                _pkgInfo.Files.Add(new PkgInfo.FileInfo() { Path = entry.FullName, Lenght = (int)(entry.Length), Offset = filesOffset, });
+                _pkgInfo.Files.Add(new PKGInfo.FileInfo() { Path = entry.FullName, Lenght = (int)(entry.Length), Offset = filesOffset, });
                 filesOffset += (int)(entry.Length);
             }
         }
 
 
-        private void ZipToPkg()
+        private void ZipToPKG()
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             using (var bw = new BinaryWriter(_pkgFileStream, Encoding.UTF8, true))
@@ -158,7 +156,7 @@ namespace WallpaperEnginePKGtoZip
                         int readedCount = stream.Read(readedBytes, 0, readedBytes.Length);
 
                         if (readedCount != readedBytes.Length) //Кидаемься молотком, если вдруг насокячили с чтением
-                            throw new PkgConverterException(new ArgumentOutOfRangeException($"File lenght: {readedBytes.Length}, but readed: {readedCount}"), Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT);
+                            throw new PKGConverterException(new ArgumentOutOfRangeException($"File lenght: {readedBytes.Length}, but readed: {readedCount}"), Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT);
 
                         //Write file data into pkg
                         bw.Write(readedBytes, 0, readedCount);
@@ -182,7 +180,7 @@ namespace WallpaperEnginePKGtoZip
                 _pkgInfo.Signature = Encoding.UTF8.GetString(br.ReadBytes(signatureLength));
 
                 if (!_pkgInfo.Signature.StartsWith("PKGV")) //Check its PKG file?
-                    throw new PkgConverterException(new InvalidDataException(_pkgInfo.Signature), Error.INVALID_PKG_FILE_SIGNATURE);
+                    throw new PKGConverterException(new InvalidDataException(_pkgInfo.Signature), Error.INVALID_PKG_FILE_SIGNATURE);
                 else if ((_pkgInfo.Signature != "PKGV0001") && (_pkgInfo.Signature != "PKGV0002") && (_pkgInfo.Signature != "PKGV0021")) //It supported version?
                 {
                     var savedColor = Console.ForegroundColor;
@@ -204,7 +202,7 @@ namespace WallpaperEnginePKGtoZip
                     int offset = br.ReadInt32();
                     int lenght = br.ReadInt32();
 
-                    _pkgInfo.Files.Add(new PkgInfo.FileInfo() { Path = path, Offset = offset, Lenght = lenght });
+                    _pkgInfo.Files.Add(new PKGInfo.FileInfo() { Path = path, Offset = offset, Lenght = lenght });
                 }
 
                 //We get the beginning of the contents of the files
@@ -233,7 +231,7 @@ namespace WallpaperEnginePKGtoZip
                     }
                     catch (Exception ex)
                     {
-                        throw new PkgConverterException(ex, Error.FAILED_SEEKING_PKG_FILE);
+                        throw new PKGConverterException(ex, Error.FAILED_SEEKING_PKG_FILE);
                     }
 
 
@@ -246,12 +244,12 @@ namespace WallpaperEnginePKGtoZip
                     }
                     catch (Exception ex)
                     {
-                        throw new PkgConverterException(ex, Error.FAILED_READING_PKG_FILE);
+                        throw new PKGConverterException(ex, Error.FAILED_READING_PKG_FILE);
                     }
 
 
                     if (readedCount != file.Lenght) //Кидаемься молотком, если вдруг насокячили с чтением
-                        throw new PkgConverterException(new ArgumentOutOfRangeException($"File lenght: {file.Lenght}, but readed: {readedCount}"), Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT);
+                        throw new PKGConverterException(new ArgumentOutOfRangeException($"File lenght: {file.Lenght}, but readed: {readedCount}"), Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT);
 
 
                     //Write into zip archive!
@@ -261,7 +259,7 @@ namespace WallpaperEnginePKGtoZip
                         writer.Flush();
                     }
                     catch (Exception ex)  {
-                        throw new PkgConverterException(ex, Error.FAILED_WRITING_INTO_ZIP_FILE);
+                        throw new PKGConverterException(ex, Error.FAILED_WRITING_INTO_ZIP_FILE);
                     }
                 }
 
@@ -304,13 +302,10 @@ namespace WallpaperEnginePKGtoZip
             _zipArchive.SetComment($"{Program.ZipComment}\n{pkgVersion}", Encoding.UTF8);
         }
 
-
-
-
         public void Convert()
         {
             if (disposed) //We cannot convert multiply times at one converter object
-                throw new PkgConverterException(new ObjectDisposedException(GetType().Name), Error.ALREADY_CONVERTED);
+                throw new PKGConverterException(new ObjectDisposedException(GetType().Name), Error.ALREADY_CONVERTED);
 
             Console.ForegroundColor = ConsoleColor.Gray;
             if (_pkgToZip)
@@ -321,18 +316,18 @@ namespace WallpaperEnginePKGtoZip
                 {
                     ReadPkgInfo(); //Read pkg
                 }
-                catch (PkgConverterException) //Rethrown converter exception
+                catch (PKGConverterException) //Rethrown converter exception
                 {
                     throw;
                 }
                 catch (Exception ex) //Not converter exception
                 {
-                    throw new PkgConverterException(ex, Error.PKG_FILE_CORRUPTED);
+                    throw new PKGConverterException(ex, Error.PKG_FILE_CORRUPTED);
                 }
 
 
                 //We write how many files are in the archive and begin packing in the zip archive (.zip)
-                Console.WriteLine($"Files in pkg: {_pkgInfo.FilesCount}");
+                Console.WriteLine($"Files in PKG: {_pkgInfo.FilesCount}");
                 Console.WriteLine($"Starting repacking to zip: {Path.GetFileName(_zipFileStream.Name)}\n");
 
 
@@ -340,13 +335,13 @@ namespace WallpaperEnginePKGtoZip
                 {
                     PkgToZip();
                 }
-                catch (PkgConverterException) //Rethrown converter exception
+                catch (PKGConverterException) //Rethrown converter exception
                 {
                     throw;
                 }
                 catch (Exception ex) //Not converter exception
                 {
-                    throw new PkgConverterException(ex, Error.UNHANDLED_EXCEPTION);
+                    throw new PKGConverterException(ex, Error.UNHANDLED_EXCEPTION);
                 }
                 finally
                 {
@@ -369,32 +364,32 @@ namespace WallpaperEnginePKGtoZip
                 {
                     CreatePkgInfoFromZip(); //Create PkgInfo from zip
                 }
-                catch (PkgConverterException) //Rethrown converter exception
+                catch (PKGConverterException) //Rethrown converter exception
                 {
                     throw;
                 }
                 catch (Exception ex) //Not converter exception
                 {
-                    throw new PkgConverterException(ex, Error.UNHANDLED_EXCEPTION);
+                    throw new PKGConverterException(ex, Error.UNHANDLED_EXCEPTION);
                 }
 
 
                 //We write how many files are in the archive and begin packing into a .pkg
                 Console.WriteLine($"Files in zip: {_pkgInfo.FilesCount}");
-                Console.WriteLine($"Starting repacking to pkg: \"{_pkgInfo.FilePath}\"\n");
+                Console.WriteLine($"Starting repacking to PKG: \"{_pkgInfo.FilePath}\"\n");
 
 
                 try
                 {
-                    ZipToPkg();
+                    ZipToPKG();
                 }
-                catch (PkgConverterException) //Rethrown converter exception
+                catch (PKGConverterException) //Rethrown converter exception
                 {
                     throw;
                 }
                 catch (Exception ex) //Not converter exception
                 {
-                    throw new PkgConverterException(ex, Error.UNHANDLED_EXCEPTION);
+                    throw new PKGConverterException(ex, Error.UNHANDLED_EXCEPTION);
                 }
                 finally
                 {
@@ -420,7 +415,7 @@ namespace WallpaperEnginePKGtoZip
             GC.SuppressFinalize(this);
         }
 
-        ~PkgConverter()
+        ~PKGConverter()
         {
             Dispose(false);
         }
@@ -443,18 +438,18 @@ namespace WallpaperEnginePKGtoZip
 
 
 
-        public class PkgConverterException : Exception
+        public class PKGConverterException : Exception
         {
             public Exception SourceException;
             public Error Error;
             public string SrcMsg => SourceException.Message;
 
-            public PkgConverterException(Error Error)
+            public PKGConverterException(Error Error)
             {
                 this.Error = Error;
             }
 
-            public PkgConverterException(Exception SourceException, Error Error)
+            public PKGConverterException(Exception SourceException, Error Error)
             {
                 this.SourceException = SourceException;
                 this.Error = Error;

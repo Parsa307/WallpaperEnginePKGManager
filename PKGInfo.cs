@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace WallpaperEnginePKGtoZip
+﻿namespace WallpaperEnginePKGtoZip
 {
-    public class PkgInfo
+    public class PKGInfo
     {
         public string Signature;
         public string FilePath;     
@@ -10,9 +8,9 @@ namespace WallpaperEnginePKGtoZip
         public int Offset;
         public List<FileInfo> Files = new List<FileInfo>();
 
-        public PkgInfo() { }
+        public PKGInfo() { }
 
-        public PkgInfo(string pkgFilePath)
+        public PKGInfo(string pkgFilePath)
         {
             this.FilePath = pkgFilePath;
         }

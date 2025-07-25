@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Diagnostics;
 
 namespace WallpaperEnginePKGtoZip
 {
@@ -27,7 +27,7 @@ namespace WallpaperEnginePKGtoZip
             string pkg = args[1];
             string zip = args[2];
 
-            PkgConverter converter = null;
+            PKGConverter converter = null;
 
             bool convertToZip;
 
@@ -52,22 +52,22 @@ namespace WallpaperEnginePKGtoZip
             
                     try
                     {
-                        converter = new PkgConverter(pkg, zip, convertToZip);
+                        converter = new PKGConverter(pkg, zip, convertToZip);
                     }
-                    catch (PkgConverter.PkgConverterException ex)
+                    catch (PKGConverter.PKGConverterException ex)
                     {
                         //Error handling
                         Console.ForegroundColor = ConsoleColor.Red;
                         {
                             switch (ex.Error)
                             {
-                                case PkgConverter.Error.PKG_FILE_NOT_FOUND:
+                                case PKGConverter.Error.PKG_FILE_NOT_FOUND:
                                     Console.WriteLine($"PKG file: '{pkg}' not found! You are sure about correctness of this path?");
                                     break;
-                                case PkgConverter.Error.FAILED_TO_CREATE_FILE_STREAM:
+                                case PKGConverter.Error.FAILED_TO_CREATE_FILE_STREAM:
                                     Console.WriteLine($"Failed to create file streams for pkg: '{pkg}' and zip: '{zip}' - Message:[{ex.SrcMsg}]");
                                     break;
-                                case PkgConverter.Error.FAILED_TO_OPEN_ZIP_ARCHIVE:
+                                case PKGConverter.Error.FAILED_TO_OPEN_ZIP_ARCHIVE:
                                     Console.WriteLine($"Failed to open zip archive: '{zip}' - Message:[{ex.SrcMsg}]");
                                     break;
                             }
@@ -82,31 +82,31 @@ namespace WallpaperEnginePKGtoZip
                     {
                         converter.Convert();
                     }
-                    catch (PkgConverter.PkgConverterException ex)
+                    catch (PKGConverter.PKGConverterException ex)
                     {
                         //Error handling
                         Console.ForegroundColor = ConsoleColor.Red;
                         switch (ex.Error)
                         {
-                            case PkgConverter.Error.UNHANDLED_EXCEPTION:
+                            case PKGConverter.Error.UNHANDLED_EXCEPTION:
                                 Console.WriteLine($"Unhandled exception occured! - Message:[{ex.SrcMsg}]");
                                 break;
-                            case PkgConverter.Error.PKG_FILE_CORRUPTED:
-                                Console.WriteLine($"Pkg file: '{pkg}' corrupted or unhandled error! - Message:[{ex.SrcMsg}]");
+                            case PKGConverter.Error.PKG_FILE_CORRUPTED:
+                                Console.WriteLine($"PKG file: '{pkg}' corrupted or unhandled error! - Message:[{ex.SrcMsg}]");
                                 break;
-                            case PkgConverter.Error.INVALID_PKG_FILE_SIGNATURE:
-                                Console.WriteLine($"Unknown pkg signature - [{ex.SrcMsg}]");
+                            case PKGConverter.Error.INVALID_PKG_FILE_SIGNATURE:
+                                Console.WriteLine($"Unknown PKG signature - [{ex.SrcMsg}]");
                                 break;
-                            case PkgConverter.Error.FAILED_SEEKING_PKG_FILE:
-                                Console.WriteLine($"Failed seeking in pkg file - [{ex.SrcMsg}]");
+                            case PKGConverter.Error.FAILED_SEEKING_PKG_FILE:
+                                Console.WriteLine($"Failed seeking in PKG file - [{ex.SrcMsg}]");
                                 break;
-                            case PkgConverter.Error.FAILED_READING_PKG_FILE:
-                                Console.WriteLine($"Failed reading pkg file! - Message:[{ex.SrcMsg}]");
+                            case PKGConverter.Error.FAILED_READING_PKG_FILE:
+                                Console.WriteLine($"Failed reading PKG file! - Message:[{ex.SrcMsg}]");
                                 break;
-                            case PkgConverter.Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT:
+                            case PKGConverter.Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT:
                                 Console.WriteLine($"Readed length != Need length - Message:[{ex.SrcMsg}]");
                                 break;
-                            case PkgConverter.Error.FAILED_WRITING_INTO_ZIP_FILE:
+                            case PKGConverter.Error.FAILED_WRITING_INTO_ZIP_FILE:
                                 Console.WriteLine($"Failed writing into zip file! - Message:[{ex.SrcMsg}]");
                                 break;
                         }
@@ -121,11 +121,12 @@ namespace WallpaperEnginePKGtoZip
         private static void ShowUsage()
         {
             //Usage for the user!
+            string exeName = Process.GetCurrentProcess().ProcessName;
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("Usage: \"WallpaperEnginePKGtoZip.exe\" [mode] [pkgFile] [zipFile]");
-            Console.WriteLine("pkgFile      Wallpaper Engine \".pkg\" file path");
-            Console.WriteLine("zipFile      Archive \".zip\" file path");
-            Console.WriteLine("Example: \"WallpaperEnginePKGtoZip.exe\" --pkgtozip scene.pkg result.zip");
+            Console.WriteLine($"Usage: {exeName} [mode] [pkgFile] [zipFile]");
+            Console.WriteLine("pkgFile - Wallpaper Engine \".pkg\" file path");
+            Console.WriteLine("zipFile - Archive \".zip\" file path");
+            Console.WriteLine($"Example: {exeName} --pkgtozip scene.pkg result.zip");
             Environment.Exit(0);
         }
     }

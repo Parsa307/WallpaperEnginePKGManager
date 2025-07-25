@@ -3,28 +3,20 @@ Simple program to convert the Wallpaper Engine Pkg files to Zip and back!
 
 Supported version of PKGS's: "PKGV0001", "PKGV0002", "PKGV0021"
 
- 
-
 ## Usage
-[![](https://i.imgur.com/jBDAeL4.jpg)](https://i.imgur.com/jBDAeL4.jpg)
-
+![Preview of Usage](Usage.png)
  
 ## Converting
-__Repacking Pkg to Zip!__
-[![](https://i.imgur.com/d9sqjfZ.jpg)](https://i.imgur.com/d9sqjfZ.jpg)
+__Repacking PKG to Zip!__
+![Preview of Repacking PKG to Zip!](PKGtoZip.png)
 
 __Repacking result!__
-[![](https://i.imgur.com/PDhySPY.jpg)](https://i.imgur.com/PDhySPY.jpg)
-
- 
+![Preview of Repacked Zip!](RepackedZip.png)
 
 __And back from zip to pkg!__
-[![](https://i.imgur.com/sEDu8zE.jpg)](https://i.imgur.com/sEDu8zE.jpg)
+![Preview of Repacked Zip!](ZiptoPKG.png)
 
- 
 __Easily as never!__
-
- 
  
 ## Important information
 __The program was created for introductory purposes.__
