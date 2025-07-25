@@ -286,7 +286,7 @@ namespace WallpaperEnginePKGtoZip
         public void SetSignaturetoZip()
         {
             string pkgVersion = $"                  ┌──────────────────────┐\n                  │ PKGVersion: {_pkgInfo.Signature} │\n                  ╘══════════════════════╛";
-            _zipArchive.SetComment($"{Program.ZipComment}\n{pkgVersion}", Encoding.UTF8);
+            _zipArchive.SetComment($"{pkgVersion}", Encoding.UTF8);
         }
 
         public void Convert()

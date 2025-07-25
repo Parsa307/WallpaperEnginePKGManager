@@ -4,9 +4,6 @@ namespace WallpaperEnginePKGtoZip
 {
     class Program
     {
-        public static string Version = "v1.0";
-        public static readonly string ZipComment = $"┌────────────────────────────────────────────────────────────┐\n│              This zip was created in program:              │ \n├────────────────────────────────────────────────────────────┤\n│         Wallpaper Engine PKG to Zip and back  [{Version}]       │\n├────────────────────────────────────────────────────────────┤\n│ https://github.com/Parsa307/Wallpaper-Engine-PKG-to-Zip │\n╘════════════════════════════════════════════════════════════╛\n";
-
         static void Main(string[] args)
         {
             if (args.Length == 1 && (args[0].ToLower() == "-h" || args[0].ToLower() == "--help"))
