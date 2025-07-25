@@ -26,6 +26,7 @@ jobs:
         run: >
           dotnet publish
           --configuration Release
+          /p:PublishSingleFile=true
           -p:PlatformTarget=${{ matrix.arch }}
           -o build-${{ matrix.os }}-${{ matrix.arch }}
 
@@ -47,11 +48,17 @@ jobs:
       - name: 🔍 Get Commit Info
         id: commit
         run: |
-          MSG=$(git log -1 --pretty=%s)
-          HASH=$(git rev-parse --short=7 HEAD)
           DATE=$(date +'%Y-%m-%d_%H-%M')
+          MSG=$(git log -1 --pretty=%B | head -n1 | sed 's/"/\\"/g')
+          # Full commit history (hash + message), limit last 20 commits (change as needed)
+          HISTORY=$(git log -20 --pretty=format:"%h %s" | sed 's/"/\\"/g')
+
+          # Compose release notes content
+          NOTES="Release date: ${DATE}\n\n${MSG}\n\nFull commit history:\n${HISTORY}"
+
           echo "tag=${DATE}" >> $GITHUB_OUTPUT
-          echo "title=${MSG} (${HASH})" >> $GITHUB_OUTPUT
+          echo "title=${MSG}" >> $GITHUB_OUTPUT
+          echo "notes=${NOTES}" >> $GITHUB_OUTPUT
 
       - name: 📦 Download All Artifacts
         uses: actions/download-artifact@v4
@@ -63,6 +70,7 @@ jobs:
         with:
           tag_name: ${{ steps.commit.outputs.tag }}
           name: ${{ steps.commit.outputs.title }}
+          body: ${{ steps.commit.outputs.notes }}
           files: |
             all_builds/**/*
 
