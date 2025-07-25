@@ -74,8 +74,6 @@ namespace WallpaperEnginePKGtoZip
             }
         }
 
-
-
         private void CreatePkgInfoFromZip()
         {
             //Detecting original version of file
@@ -105,7 +103,6 @@ namespace WallpaperEnginePKGtoZip
                 filesOffset += (int)(entry.Length);
             }
         }
-
 
         private void ZipToPKG()
         {
@@ -169,8 +166,6 @@ namespace WallpaperEnginePKGtoZip
             }
         }
 
-
-
         private void ReadPkgInfo()
         {
             using (var br = new BinaryReader(_pkgFileStream, Encoding.UTF8, true))
@@ -189,7 +184,7 @@ namespace WallpaperEnginePKGtoZip
                     Console.ForegroundColor = savedColor;
                 }
                 else
-                    Console.WriteLine($"PkgVersion: {_pkgInfo.Signature}");
+                    Console.WriteLine($"PKGVersion: {_pkgInfo.Signature}");
 
                 //Read a file count in package
                 _pkgInfo.FilesCount = br.ReadInt32();
@@ -269,8 +264,6 @@ namespace WallpaperEnginePKGtoZip
             }
         }
 
-
-
         public string DetectSignatureFromZip()
         {
             try
@@ -298,7 +291,7 @@ namespace WallpaperEnginePKGtoZip
 
         public void SetSignatureToZip()
         {
-            string pkgVersion = $"                  ┌──────────────────────┐\n                  │ PkgVersion: {_pkgInfo.Signature} │\n                  ╘══════════════════════╛";
+            string pkgVersion = $"                  ┌──────────────────────┐\n                  │ PKGVersion: {_pkgInfo.Signature} │\n                  ╘══════════════════════╛";
             _zipArchive.SetComment($"{Program.ZipComment}\n{pkgVersion}", Encoding.UTF8);
         }
 

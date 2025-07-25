@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 using System.Reflection;
 using System.IO.Compression;
 
@@ -37,7 +35,6 @@ namespace WallpaperEnginePKGtoZip
             var field = type.GetField("_archiveComment", BindingFlags.NonPublic | BindingFlags.Instance);
             field.SetValue(archive, encoding.GetBytes(comment));
         }
-
 
 
         private static bool SeekBackwardsToSignature32(Stream stream, uint signatureToFind)

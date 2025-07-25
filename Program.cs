@@ -76,7 +76,6 @@ namespace WallpaperEnginePKGtoZip
                         return;
                     }
 
-
                     //Convert!
                     try
                     {
@@ -115,8 +114,6 @@ namespace WallpaperEnginePKGtoZip
                         return;
                     }
                 }
-
-
 
         private static void ShowUsage()
         {
