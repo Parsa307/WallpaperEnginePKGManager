@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace WallpaperEnginePKGtoZip
+namespace WallpaperEnginePKGManager
 {
     class Program
     {
@@ -21,7 +21,7 @@ namespace WallpaperEnginePKGtoZip
                 Environment.Exit(1);
             }
 
-            PKGConverter converter = null;
+            PKGManager converter = null;
 
             bool convertToZip;
             string pkg = null;
@@ -50,22 +50,22 @@ namespace WallpaperEnginePKGtoZip
             
                     try
                     {
-                        converter = new PKGConverter(pkg, zip, convertToZip);
+                        converter = new PKGManager(pkg, zip, convertToZip);
                     }
-                    catch (PKGConverter.PKGConverterException ex)
+                    catch (PKGManager.PKGManagerException ex)
                     {
                         //Error handling
                         Console.ForegroundColor = ConsoleColor.Red;
                         {
                             switch (ex.Error)
                             {
-                                case PKGConverter.Error.PKG_FILE_NOT_FOUND:
+                                case PKGManager.Error.PKG_FILE_NOT_FOUND:
                                     Console.WriteLine($"PKG file: '{pkg}' not found! You are sure about correctness of this path?");
                                     break;
-                                case PKGConverter.Error.FAILED_TO_CREATE_FILE_STREAM:
+                                case PKGManager.Error.FAILED_TO_CREATE_FILE_STREAM:
                                     Console.WriteLine($"Failed to create file streams for pkg: '{pkg}' and zip: '{zip}' - Message:[{ex.SrcMsg}]");
                                     break;
-                                case PKGConverter.Error.FAILED_TO_OPEN_ZIP_ARCHIVE:
+                                case PKGManager.Error.FAILED_TO_OPEN_ZIP_ARCHIVE:
                                     Console.WriteLine($"Failed to open zip archive: '{zip}' - Message:[{ex.SrcMsg}]");
                                     break;
                             }
@@ -79,31 +79,31 @@ namespace WallpaperEnginePKGtoZip
                     {
                         converter.Convert();
                     }
-                    catch (PKGConverter.PKGConverterException ex)
+                    catch (PKGManager.PKGManagerException ex)
                     {
                         //Error handling
                         Console.ForegroundColor = ConsoleColor.Red;
                         switch (ex.Error)
                         {
-                            case PKGConverter.Error.UNHANDLED_EXCEPTION:
+                            case PKGManager.Error.UNHANDLED_EXCEPTION:
                                 Console.WriteLine($"Unhandled exception occured! - Message:[{ex.SrcMsg}]");
                                 break;
-                            case PKGConverter.Error.PKG_FILE_CORRUPTED:
+                            case PKGManager.Error.PKG_FILE_CORRUPTED:
                                 Console.WriteLine($"PKG file: '{pkg}' corrupted or unhandled error! - Message:[{ex.SrcMsg}]");
                                 break;
-                            case PKGConverter.Error.INVALID_PKG_FILE_SIGNATURE:
+                            case PKGManager.Error.INVALID_PKG_FILE_SIGNATURE:
                                 Console.WriteLine($"Unknown PKG signature - [{ex.SrcMsg}]");
                                 break;
-                            case PKGConverter.Error.FAILED_SEEKING_PKG_FILE:
+                            case PKGManager.Error.FAILED_SEEKING_PKG_FILE:
                                 Console.WriteLine($"Failed seeking in PKG file - [{ex.SrcMsg}]");
                                 break;
-                            case PKGConverter.Error.FAILED_READING_PKG_FILE:
+                            case PKGManager.Error.FAILED_READING_PKG_FILE:
                                 Console.WriteLine($"Failed reading PKG file! - Message:[{ex.SrcMsg}]");
                                 break;
-                            case PKGConverter.Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT:
+                            case PKGManager.Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT:
                                 Console.WriteLine($"Readed length != Need length - Message:[{ex.SrcMsg}]");
                                 break;
-                            case PKGConverter.Error.FAILED_WRITING_INTO_ZIP_FILE:
+                            case PKGManager.Error.FAILED_WRITING_INTO_ZIP_FILE:
                                 Console.WriteLine($"Failed writing into zip file! - Message:[{ex.SrcMsg}]");
                                 break;
                         }

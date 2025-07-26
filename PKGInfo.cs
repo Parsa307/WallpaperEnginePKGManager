@@ -1,4 +1,4 @@
-﻿namespace WallpaperEnginePKGtoZip
+﻿namespace WallpaperEnginePKGManager
 {
     public class PKGInfo
     {

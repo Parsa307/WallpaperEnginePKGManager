@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.IO.Compression;
 
-namespace WallpaperEnginePKGtoZip
+namespace WallpaperEnginePKGManager
 {
     public static class ZipArchiveExtensions
     {
