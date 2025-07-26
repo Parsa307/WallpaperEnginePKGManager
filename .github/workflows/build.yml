@@ -44,15 +44,6 @@ jobs:
       - name: 📥 Checkout Code
         uses: actions/checkout@v3
 
-      - name: 🔍 Get Previous Tag
-        id: prevtag
-        run: |
-          git fetch --tags
-          LATEST_TAG=$(git tag --sort=-creatordate | head -1)
-          PREV_TAG=$(git tag --sort=-creatordate | grep -v "^$LATEST_TAG$" | head -1)
-          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
-
       - name: 🏷️ Create and Push Tag
         id: tag
         env:
@@ -65,6 +56,23 @@ jobs:
           git tag $TAG
           git push origin $TAG
           echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: 🔍 Get Previous Tag
+        id: prevtag
+        run: |
+          git fetch --tags
+          TAGS=($(git tag --sort=-creatordate))
+          LATEST_TAG="${{ steps.tag.outputs.tag }}"
+          for i in "${!TAGS[@]}"; do
+            if [[ "${TAGS[$i]}" == "$LATEST_TAG" ]]; then
+              INDEX=$i
+              break
+            fi
+          done
+          PREV_INDEX=$((INDEX + 1))
+          PREV_TAG="${TAGS[$PREV_INDEX]}"
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
 
       - name: 📝 Generate Release Notes
         id: notes
