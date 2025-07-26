@@ -44,21 +44,38 @@ jobs:
       - name: 📥 Checkout Code
         uses: actions/checkout@v3
 
-      - name: 🔍 Get Commit Info
-        id: commit
+      - name: 🔍 Get Previous Tag
+        id: prevtag
+        run: |
+          git fetch --tags
+          PREV_TAG=$(git tag --sort=-creatordate | head -n 1)
+          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
+
+      - name: 🏷️ Create and Push Tag
+        id: tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           DATE=$(date +'%Y-%m-%d_%H-%M')
           TAG=$DATE
-          PREV_TAG=$(git describe --tags --abbrev=0 || echo "")
-          REPO_URL="https://github.com/${{ github.repository }}"
-          if [ -n "$PREV_TAG" ]; then
-            DIFF_URL="$REPO_URL/compare/$PREV_TAG...$TAG"
-            NOTES="Release date: $DATE%0A%0AFull changes: [Click here]($DIFF_URL)"
-          else
-            NOTES="Release date: $DATE"
-          fi
-
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $TAG
+          git push origin $TAG
           echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: 📝 Generate Release Notes
+        id: notes
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          PREV_TAG="${{ steps.prevtag.outputs.prev_tag }}"
+          REPO_URL="https://github.com/${{ github.repository }}"
+          if [ -n "$PREV_TAG" ] && [ "$PREV_TAG" != "$TAG" ]; then
+            DIFF_URL="$REPO_URL/compare/$PREV_TAG...$TAG"
+            NOTES="Release date: $TAG%0A%0AFull changes: [Click here]($DIFF_URL)"
+          else
+            NOTES="Release date: $TAG"
+          fi
           echo "notes=$NOTES" >> $GITHUB_OUTPUT
           echo "title=Release $TAG" >> $GITHUB_OUTPUT
 
@@ -90,12 +107,11 @@ jobs:
       - name: 🚀 Create Release on GitHub
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.commit.outputs.tag }}
-          name: ${{ steps.commit.outputs.title }}
-          body: ${{ steps.commit.outputs.notes }}
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.notes.outputs.title }}
+          body: ${{ steps.notes.outputs.notes }}
           files: |
             WallpaperEnginePKGtoZip_linux_x64.zip
             WallpaperEnginePKGtoZip_linux_x86.zip
             WallpaperEnginePKGtoZip_windows_x64.zip
             WallpaperEnginePKGtoZip_windows_x86.zip
-
