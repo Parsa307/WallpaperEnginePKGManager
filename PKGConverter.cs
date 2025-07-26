@@ -285,7 +285,7 @@ namespace WallpaperEnginePKGtoZip
 
         public void SetSignaturetoZip()
         {
-            string pkgVersion = $"                  ┌──────────────────────┐\n                  │ PKGVersion: {_pkgInfo.Signature} │\n                  ╘══════════════════════╛";
+            string pkgVersion = $"PKGVersion: {_pkgInfo.Signature}";
             _zipArchive.SetComment($"{pkgVersion}", Encoding.UTF8);
         }
 
@@ -301,7 +301,7 @@ namespace WallpaperEnginePKGtoZip
 
                 try
                 {
-                    ReadPKGInfo(); //Read pkg
+                    ReadPKGInfo(); //Read PKG
                 }
                 catch (PKGConverterException) //Rethrown converter exception
                 {
