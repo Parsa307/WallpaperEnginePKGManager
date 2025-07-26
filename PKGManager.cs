@@ -10,12 +10,12 @@ namespace WallpaperEnginePKGManager
         private FileStream _zipFileStream;
         private ZipArchive _zipArchive;
         
-        private bool _pkgToZip;
+        private bool _pkgtoZip;
 
-        public PKGManager(string pkgFilePath, string zipFilePath, bool pkgToZip)
+        public PKGManager(string pkgFilePath, string zipFilePath, bool pkgtoZip)
         {
-            this._pkgToZip = pkgToZip;
-            if (pkgToZip)
+            this._pkgtoZip = pkgtoZip;
+            if (pkgtoZip)
             {
                 if (!File.Exists(pkgFilePath)) //Check exists pkg file?
                     throw new PKGManagerException(new FileNotFoundException(pkgFilePath), Error.PKG_FILE_NOT_FOUND);
@@ -103,7 +103,7 @@ namespace WallpaperEnginePKGManager
             }
         }
 
-        private void ZipToPKG()
+        private void ZiptoPKG()
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             using (var bw = new BinaryWriter(_pkgFileStream, Encoding.UTF8, true))
@@ -151,7 +151,7 @@ namespace WallpaperEnginePKGManager
                         byte[] readedBytes = new byte[entry.Length];
                         int readedCount = stream.Read(readedBytes, 0, readedBytes.Length);
 
-                        if (readedCount != readedBytes.Length) //Кидаемься молотком, если вдруг насокячили с чтением
+                        if (readedCount != readedBytes.Length) //We throw the Exception if we messed up reading
                             throw new PKGManagerException(new ArgumentOutOfRangeException($"File lenght: {readedBytes.Length}, but readed: {readedCount}"), Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT);
 
                         //Write file data into pkg
@@ -294,7 +294,7 @@ namespace WallpaperEnginePKGManager
                 throw new PKGManagerException(new ObjectDisposedException(GetType().Name), Error.ALREADY_CONVERTED);
 
             Console.ForegroundColor = ConsoleColor.Gray;
-            if (_pkgToZip)
+            if (_pkgtoZip)
             {
                 Console.WriteLine($"Reading PKG: {_pkgInfo.FilePath}");
 
@@ -314,7 +314,7 @@ namespace WallpaperEnginePKGManager
 
                 //We write how many files are in the archive and begin packing in the zip archive (.zip)
                 Console.WriteLine($"Files in PKG: {_pkgInfo.FilesCount}");
-                Console.WriteLine($"Starting repacking to zip: {Path.GetFileName(_zipFileStream.Name)}\n");
+                Console.WriteLine($"Starting repacking to Zip: {Path.GetFileName(_zipFileStream.Name)}\n");
 
 
                 try
@@ -333,7 +333,6 @@ namespace WallpaperEnginePKGManager
                 {
                     Dispose(); //Dispose all resourses
                 }
-
 
                 //Says successfully results
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -359,15 +358,13 @@ namespace WallpaperEnginePKGManager
                     throw new PKGManagerException(ex, Error.UNHANDLED_EXCEPTION);
                 }
 
-
                 //We write how many files are in the archive and begin packing into a .pkg
                 Console.WriteLine($"Files in zip: {_pkgInfo.FilesCount}");
                 Console.WriteLine($"Starting repacking to PKG: \"{_pkgInfo.FilePath}\"\n");
 
-
                 try
                 {
-                    ZipToPKG();
+                    ZiptoPKG();
                 }
                 catch (PKGManagerException) //Rethrown converter exception
                 {
