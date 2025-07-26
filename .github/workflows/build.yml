@@ -1,7 +1,6 @@
 name: Build & Release
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
@@ -37,56 +36,64 @@ jobs:
           path: ${{ github.workspace }}/bin/Release/net8.0
 
   release:
-    name: Release
+    name: 🚀 Create Latest GitHub Release
     needs: build
-    permissions:
-      contents: write
-      packages: write
-      id-token: write
-      attestations: write
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Download All Artifacts
+      - name: 🔍 Get Commit Info
+        id: commit
+        run: |
+          DATE=$(date +'%Y-%m-%d_%H-%M')
+          TAG=$DATE
+          PREV_TAG=$(git describe --tags --abbrev=0 || echo "")
+          REPO_URL="https://github.com/${{ github.repository }}"
+          if [ -n "$PREV_TAG" ]; then
+            DIFF_URL="$REPO_URL/compare/$PREV_TAG...$TAG"
+            NOTES="Release date: $DATE%0A%0AFull changes: [Click here]($DIFF_URL)"
+          else
+            NOTES="Release date: $DATE"
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "notes=$NOTES" >> $GITHUB_OUTPUT
+          echo "title=Release $TAG" >> $GITHUB_OUTPUT
+
+      - name: 📦 Download All Artifacts
         uses: actions/download-artifact@v4
         with:
           path: all_builds
 
-      - name: Archive Linux x64 Build
+      - name: 📦 Archive Linux x64 Build
         run: |
           cd all_builds
           zip -r ../WallpaperEnginePKGtoZip_linux_x64.zip build-ubuntu-latest-x64
 
-      - name: Archive Linux x86 Build
+      - name: 📦 Archive Linux x86 Build
         run: |
           cd all_builds
           zip -r ../WallpaperEnginePKGtoZip_linux_x86.zip build-ubuntu-latest-x86
 
-      - name: Archive Windows x64 Build
+      - name: 📦 Archive Windows x64 Build
         run: |
           cd all_builds
           zip -r ../WallpaperEnginePKGtoZip_windows_x64.zip build-windows-latest-x64
 
-      - name: Archive Windows x86 Build
+      - name: 📦 Archive Windows x86 Build
         run: |
           cd all_builds
           zip -r ../WallpaperEnginePKGtoZip_windows_x86.zip build-windows-latest-x86
 
-      - name: Release
-        uses: cycjimmy/semantic-release-action@v4
-        id: release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Attest
-        if: steps.release.outputs.new_release_published == 'true'
-        uses: actions/attest-build-provenance@v2
+      - name: 🚀 Create Release on GitHub
+        uses: softprops/action-gh-release@v2
         with:
-          subject-name: 'WallpaperEnginePKGtoZip ${{ steps.release.outputs.new_release_git_tag }}'
-          subject-path: |
+          tag_name: ${{ steps.commit.outputs.tag }}
+          name: ${{ steps.commit.outputs.title }}
+          body: ${{ steps.commit.outputs.notes }}
+          files: |
             WallpaperEnginePKGtoZip_linux_x64.zip
             WallpaperEnginePKGtoZip_linux_x86.zip
             WallpaperEnginePKGtoZip_windows_x64.zip
