@@ -10,12 +10,12 @@ namespace WallpaperEnginePKGManager
         private FileStream _zipFileStream;
         private ZipArchive _zipArchive;
         
-        private bool _pkgtoZip;
+        private bool _PKGtoZip;
 
-        public PKGManager(string pkgFilePath, string zipFilePath, bool pkgtoZip)
+        public PKGManager(string pkgFilePath, string zipFilePath, bool PKGtoZip)
         {
-            this._pkgtoZip = pkgtoZip;
-            if (pkgtoZip)
+            this._PKGtoZip = PKGtoZip;
+            if (PKGtoZip)
             {
                 if (!File.Exists(pkgFilePath)) //Check exists pkg file?
                     throw new PKGManagerException(new FileNotFoundException(pkgFilePath), Error.PKG_FILE_NOT_FOUND);
@@ -294,7 +294,7 @@ namespace WallpaperEnginePKGManager
                 throw new PKGManagerException(new ObjectDisposedException(GetType().Name), Error.ALREADY_CONVERTED);
 
             Console.ForegroundColor = ConsoleColor.Gray;
-            if (_pkgtoZip)
+            if (_PKGtoZip)
             {
                 Console.WriteLine($"Reading PKG: {_pkgInfo.FilePath}");
 
