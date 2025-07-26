@@ -27,13 +27,13 @@ namespace WallpaperEnginePKGManager
             string pkg = null;
             string zip = null;
 
-            if (args[0].ToLower() == "--pkgtozip")
+            if (args[0].ToLower() == "--extract")
             {
                 convertToZip = true;
                 pkg = args[1];
                 zip = args[2];
             }
-            else if (args[0].ToLower() == "--ziptopkg")
+            else if (args[0].ToLower() == "--repack")
             {
                 convertToZip = false;
                 zip = args[1];
@@ -47,7 +47,7 @@ namespace WallpaperEnginePKGManager
                 Environment.Exit(1);
                 return;
             }
-            
+
                     try
                     {
                         converter = new PKGManager(pkg, zip, convertToZip);
@@ -118,10 +118,10 @@ namespace WallpaperEnginePKGManager
             //Usage for the user!
             string exeName = Process.GetCurrentProcess().ProcessName;
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"Convert PKG to Zip: {exeName} --pkgtozip [pkgFile] [zipFile]");
-            Console.WriteLine($"Example: {exeName} --pkgtozip scene.pkg result.zip");
-            Console.WriteLine($"Convert Zip to PKG: {exeName} --ziptopkg [zipFile] [pkgFile]");
-            Console.WriteLine($"Example: {exeName} --ziptopkg result.zip scene.pkg");
+            Console.WriteLine($"Convert PKG to Zip: {exeName} --extract [pkgFile] [zipFile]");
+            Console.WriteLine($"Example: {exeName} --extract scene.pkg result.zip");
+            Console.WriteLine($"Convert Zip to PKG: {exeName} --repack [zipFile] [pkgFile]");
+            Console.WriteLine($"Example: {exeName} --repack result.zip scene.pkg");
             Environment.Exit(0);
         }
     }

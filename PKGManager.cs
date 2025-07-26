@@ -198,7 +198,6 @@ namespace WallpaperEnginePKGManager
             }
         }
 
-
         public void PKGtoZip()
         {
             //Set signature of pkg to zip comment
@@ -281,7 +280,6 @@ namespace WallpaperEnginePKGManager
             return ""; //Not detected or exception
         }
 
-
         public void SetSignaturetoZip()
         {
             string pkgVersion = $"PKGVersion: {_pkgInfo.Signature}";
@@ -311,7 +309,6 @@ namespace WallpaperEnginePKGManager
                     throw new PKGManagerException(ex, Error.PKG_FILE_CORRUPTED);
                 }
 
-
                 //We write how many files are in the archive and begin packing in the zip archive (.zip)
                 Console.WriteLine($"Files in PKG: {_pkgInfo.FilesCount}");
                 Console.WriteLine($"Starting repacking to Zip: {Path.GetFileName(_zipFileStream.Name)}\n");
@@ -336,14 +333,14 @@ namespace WallpaperEnginePKGManager
 
                 //Says successfully results
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"\nPKG to Zip repackaged successfully");
+                Console.WriteLine($"\nExtracted & Repacked successfully");
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
 
             //Zip to Pkg
             else
             {
-                Console.WriteLine($"Reading zip: \"{Path.GetFileName(_zipFileStream.Name)}\"");
+                Console.WriteLine($"Reading Zip: \"{Path.GetFileName(_zipFileStream.Name)}\"");
 
                 try
                 {
@@ -359,7 +356,7 @@ namespace WallpaperEnginePKGManager
                 }
 
                 //We write how many files are in the archive and begin packing into a .pkg
-                Console.WriteLine($"Files in zip: {_pkgInfo.FilesCount}");
+                Console.WriteLine($"Files in Zip: {_pkgInfo.FilesCount}");
                 Console.WriteLine($"Starting repacking to PKG: \"{_pkgInfo.FilePath}\"\n");
 
                 try
@@ -378,7 +375,6 @@ namespace WallpaperEnginePKGManager
                 {
                     Dispose(); //Dispose all resourses
                 }
-
 
                 //Says successfully results
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -439,21 +435,17 @@ namespace WallpaperEnginePKGManager
         {
             NONE,
             UNHANDLED_EXCEPTION,
-
             INVALID_PKG_FILE_SIGNATURE,
             PKG_FILE_CORRUPTED,
-
             PKG_FILE_NOT_FOUND,
             ZIP_FILE_NOT_FOUND,
             FAILED_TO_CREATE_FILE_STREAM,
             FAILED_TO_CREATE_ZIP_ARCHIVE,
             FAILED_TO_OPEN_ZIP_ARCHIVE,
-
             FAILED_WRITING_INTO_ZIP_FILE,
             READED_LENGHT_NOT_EQUALS_NEED_LENGHT,
             FAILED_SEEKING_PKG_FILE,
             FAILED_READING_PKG_FILE,
-
             ALREADY_CONVERTED,
         }
     }
