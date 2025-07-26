@@ -1,5 +1,5 @@
-# Wallpaper Engine PKG to Zip and back!
-Simple program to convert the Wallpaper Engine PKG files to Zip and back!
+# Wallpaper Engine PKG Manager!
+Simple program the Wallpaper Engine PKG files to Extract & Repack and Repack! as .pkg!
 
 All versions are supported! (Might change in the future)
 
