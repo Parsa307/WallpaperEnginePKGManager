@@ -48,7 +48,9 @@ jobs:
         id: prevtag
         run: |
           git fetch --tags
-          PREV_TAG=$(git tag --sort=-creatordate | sed -n 2p)
+          LATEST_TAG=$(git tag --sort=-creatordate | head -1)
+          PREV_TAG=$(git tag --sort=-creatordate | grep -v "^$LATEST_TAG$" | head -1)
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
           echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
 
       - name: 🏷️ Create and Push Tag
