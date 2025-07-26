@@ -151,7 +151,7 @@ namespace WallpaperEnginePKGManager
                         byte[] readedBytes = new byte[entry.Length];
                         int readedCount = stream.Read(readedBytes, 0, readedBytes.Length);
 
-                        if (readedCount != readedBytes.Length) //We throw the Exception if we messed up reading
+                        if (readedCount != readedBytes.Length) //Throw a Exception if reading went wrong
                             throw new PKGManagerException(new ArgumentOutOfRangeException($"File lenght: {readedBytes.Length}, but readed: {readedCount}"), Error.READED_LENGHT_NOT_EQUALS_NEED_LENGHT);
 
                         //Write file data into pkg
@@ -173,7 +173,7 @@ namespace WallpaperEnginePKGManager
                 int signatureLength = br.ReadInt32();
                 _pkgInfo.Signature = Encoding.UTF8.GetString(br.ReadBytes(signatureLength));
 
-                if (!_pkgInfo.Signature.StartsWith("PKGV")) //Check its PKG file?
+                if (!_pkgInfo.Signature.StartsWith("PKGV")) //Check if it's a PKG file?
                     throw new PKGManagerException(new InvalidDataException(_pkgInfo.Signature), Error.INVALID_PKG_FILE_SIGNATURE);
 
                     //Log the PKG Version
@@ -200,7 +200,7 @@ namespace WallpaperEnginePKGManager
 
         public void PKGtoZip()
         {
-            //Set signature of pkg to zip comment
+            //Set signature of PKG to Zip comment
             SetSignaturetoZip();
 
             int filesPacked = 0;
@@ -220,7 +220,6 @@ namespace WallpaperEnginePKGManager
                     {
                         throw new PKGManagerException(ex, Error.FAILED_SEEKING_PKG_FILE);
                     }
-
 
                     //Read...
                     byte[] binBytes = new byte[file.Lenght];
@@ -313,7 +312,6 @@ namespace WallpaperEnginePKGManager
                 Console.WriteLine($"Files in PKG: {_pkgInfo.FilesCount}");
                 Console.WriteLine($"Starting repacking to Zip: {Path.GetFileName(_zipFileStream.Name)}\n");
 
-
                 try
                 {
                     PKGtoZip();
@@ -331,9 +329,9 @@ namespace WallpaperEnginePKGManager
                     Dispose(); //Dispose all resourses
                 }
 
-                //Says successfully results
+                //Says if the program succeeded
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"\nExtracted & Repacked successfully");
+                Console.WriteLine($"\nExtract & Repack succeeded");
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
 
@@ -376,9 +374,9 @@ namespace WallpaperEnginePKGManager
                     Dispose(); //Dispose all resourses
                 }
 
-                //Says successfully results
+                //Say if the program succeeded
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"\nZip to PKG repackaged successfully!");
+                Console.WriteLine($"\nRepack succeeded!");
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
