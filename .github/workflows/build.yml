@@ -48,7 +48,7 @@ jobs:
         id: prevtag
         run: |
           git fetch --tags
-          PREV_TAG=$(git tag --sort=-creatordate | head -n 1)
+          PREV_TAG=$(git tag --sort=-committerdate | tail -2 | head -1)
           echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
 
       - name: 🏷️ Create and Push Tag
@@ -72,9 +72,9 @@ jobs:
           REPO_URL="https://github.com/${{ github.repository }}"
           if [ -n "$PREV_TAG" ] && [ "$PREV_TAG" != "$TAG" ]; then
             DIFF_URL="$REPO_URL/compare/$PREV_TAG...$TAG"
-            NOTES="Release date: $TAG%0A%0AFull changes: [Click here]($DIFF_URL)"
+            NOTES="Full changes: [Click here]($DIFF_URL)"
           else
-            NOTES="Release date: $TAG"
+            NOTES=""
           fi
           echo "notes=$NOTES" >> $GITHUB_OUTPUT
           echo "title=Release $TAG" >> $GITHUB_OUTPUT
