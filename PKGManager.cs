@@ -329,7 +329,7 @@ namespace WallpaperEnginePKGManager
                     Dispose(); //Dispose all resourses
                 }
 
-                //Says if the program succeeded
+                //Tell the user if the program succeeded
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine($"\nExtract & Repack succeeded");
                 Console.ForegroundColor = ConsoleColor.Gray;
@@ -374,7 +374,7 @@ namespace WallpaperEnginePKGManager
                     Dispose(); //Dispose all resourses
                 }
 
-                //Say if the program succeeded
+                //Tell the user if the program succeeded
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine($"\nRepack succeeded!");
                 Console.ForegroundColor = ConsoleColor.Gray;
