@@ -335,7 +335,7 @@ namespace WallpaperEnginePKGManager
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
 
-            //Zip to Pkg
+            //Zip to PKG
             else
             {
                 Console.WriteLine($"Reading Zip: \"{Path.GetFileName(_zipFileStream.Name)}\"");
