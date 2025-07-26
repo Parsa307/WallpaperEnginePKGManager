@@ -4,7 +4,7 @@ using System.IO.Compression;
 
 namespace WallpaperEnginePKGManager
 {
-    public static class ZipArchiveExtensions
+    public static class ZIPArchiveExtensions
     {
         public static string GetComment(this ZipArchive archive, Encoding encoding)
         {

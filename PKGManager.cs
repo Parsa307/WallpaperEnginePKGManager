@@ -8,14 +8,14 @@ namespace WallpaperEnginePKGManager
         private PKGInfo _pkgInfo;
         private FileStream _pkgFileStream;
         private FileStream _zipFileStream;
-        private ZipArchive _zipArchive;
+        private ZipArchive _ZIPArchive;
         
-        private bool _PKGtoZip;
+        private bool _PKGtoZIP;
 
-        public PKGManager(string pkgFilePath, string zipFilePath, bool PKGtoZip)
+        public PKGManager(string pkgFilePath, string zipFilePath, bool PKGtoZIP)
         {
-            this._PKGtoZip = PKGtoZip;
-            if (PKGtoZip)
+            this._PKGtoZIP = PKGtoZIP;
+            if (PKGtoZIP)
             {
                 if (!File.Exists(pkgFilePath)) //Check exists pkg file?
                     throw new PKGManagerException(new FileNotFoundException(pkgFilePath), Error.PKG_FILE_NOT_FOUND);
@@ -36,7 +36,7 @@ namespace WallpaperEnginePKGManager
                 //Create zip archive
                 try
                 {
-                    _zipArchive = new ZipArchive(_zipFileStream, ZipArchiveMode.Create);
+                    _ZIPArchive = new ZipArchive(_zipFileStream, ZipArchiveMode.Create);
                 }
                 catch (Exception ex)
                 {
@@ -64,7 +64,7 @@ namespace WallpaperEnginePKGManager
                 //Create zip archive
                 try
                 {
-                    _zipArchive = new ZipArchive(_zipFileStream, ZipArchiveMode.Read);
+                    _ZIPArchive = new ZipArchive(_zipFileStream, ZipArchiveMode.Read);
                 }
                 catch (Exception ex)
                 {
@@ -73,10 +73,10 @@ namespace WallpaperEnginePKGManager
             }
         }
 
-        private void CreatePKGInfoFromZip()
+        private void CreatePKGInfoFromZIP()
         {
             //Detecting original version of file
-            _pkgInfo.Signature = DetectSignatureFromZip(); 
+            _pkgInfo.Signature = DetectSignatureFromZIP(); 
             if (string.IsNullOrEmpty(_pkgInfo.Signature))
             {
                 _pkgInfo.Signature = "PKGV0001";
@@ -87,23 +87,23 @@ namespace WallpaperEnginePKGManager
                 
                
             _pkgInfo.FilePath = Path.GetFileName(_pkgFileStream.Name);
-            _pkgInfo.FilesCount = _zipArchive.Entries.Count;
+            _pkgInfo.FilesCount = _ZIPArchive.Entries.Count;
 
             //Precompute offset of start file in pkg
             _pkgInfo.Offset += 4 + Encoding.UTF8.GetByteCount(_pkgInfo.Signature)/*8*/ + 4; //signatureStringLenght + "signatureString" + filesCountInt
-            foreach (var entry in _zipArchive.Entries)
+            foreach (var entry in _ZIPArchive.Entries)
                 _pkgInfo.Offset += (4 + Encoding.UTF8.GetByteCount(entry.FullName) + 4 + 4); //pathStringLenght + "pathString" + offsetInt + lenghtInt
 
             //Generate tree of files
             int filesOffset = 0;
-            foreach (var entry in _zipArchive.Entries)
+            foreach (var entry in _ZIPArchive.Entries)
             {
                 _pkgInfo.Files.Add(new PKGInfo.FileInfo() { Path = entry.FullName, Lenght = (int)(entry.Length), Offset = filesOffset, });
                 filesOffset += (int)(entry.Length);
             }
         }
 
-        private void ZiptoPKG()
+        private void ZIPtoPKG()
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             using (var bw = new BinaryWriter(_pkgFileStream, Encoding.UTF8, true))
@@ -113,7 +113,7 @@ namespace WallpaperEnginePKGManager
                 //Write signature
                 byte[] signatureStringBytes = Encoding.UTF8.GetBytes(_pkgInfo.Signature);
                 bw.Write(signatureStringBytes.Length); //Length of signature string in bytes (always is 8)
-                bw.Write(signatureStringBytes); //Pkg signature
+                bw.Write(signatureStringBytes); //PKG signature
 
                 //Write file count in
                 bw.Write(_pkgInfo.FilesCount);
@@ -142,7 +142,7 @@ namespace WallpaperEnginePKGManager
 
                 //Finally, write file data
                 int filesPacked = 0;
-                foreach (var entry in _zipArchive.Entries)
+                foreach (var entry in _ZIPArchive.Entries)
                 {
                     //Open file entry in zip archive
                     using (var stream = Stream.Synchronized(entry.Open()))
@@ -198,17 +198,17 @@ namespace WallpaperEnginePKGManager
             }
         }
 
-        public void PKGtoZip()
+        public void PKGtoZIP()
         {
-            //Set signature of PKG to Zip comment
-            SetSignaturetoZip();
+            //Set signature of PKG to ZIP comment
+            SetSignaturetoZIP();
 
             int filesPacked = 0;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             foreach (var file in _pkgInfo.Files)
             {
                 //Create a new entry in the archive with the desired name
-                var fileEntry = _zipArchive.CreateEntry(file.Path, CompressionLevel.NoCompression);
+                var fileEntry = _ZIPArchive.CreateEntry(file.Path, CompressionLevel.NoCompression);
                 using (Stream writer = Stream.Synchronized(fileEntry.Open()))
                 {
                     //Go to the desired position in the package
@@ -255,11 +255,11 @@ namespace WallpaperEnginePKGManager
             }
         }
 
-        public string DetectSignatureFromZip()
+        public string DetectSignatureFromZIP()
         {
             try
             {
-                string comment = _zipArchive.GetComment(Encoding.UTF8);
+                string comment = _ZIPArchive.GetComment(Encoding.UTF8);
                 if (comment != "")
                 {
                     string findSignature = "PKGVersion: ";
@@ -272,17 +272,17 @@ namespace WallpaperEnginePKGManager
             {
                 var savedColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Error reading zip archive comment! - Message:[{ex.Message}]");
+                Console.WriteLine($"Error reading ZIP Archive Comment! - Message:[{ex.Message}]");
                 Console.ForegroundColor = savedColor;
             }
 
             return ""; //Not detected or exception
         }
 
-        public void SetSignaturetoZip()
+        public void SetSignaturetoZIP()
         {
             string pkgVersion = $"PKGVersion: {_pkgInfo.Signature}";
-            _zipArchive.SetComment($"{pkgVersion}", Encoding.UTF8);
+            _ZIPArchive.SetComment($"{pkgVersion}", Encoding.UTF8);
         }
 
         public void Convert()
@@ -291,7 +291,7 @@ namespace WallpaperEnginePKGManager
                 throw new PKGManagerException(new ObjectDisposedException(GetType().Name), Error.ALREADY_CONVERTED);
 
             Console.ForegroundColor = ConsoleColor.Gray;
-            if (_PKGtoZip)
+            if (_PKGtoZIP)
             {
                 Console.WriteLine($"Reading PKG: {_pkgInfo.FilePath}");
 
@@ -310,11 +310,11 @@ namespace WallpaperEnginePKGManager
 
                 //We write how many files are in the archive and begin packing in the zip archive (.zip)
                 Console.WriteLine($"Files in PKG: {_pkgInfo.FilesCount}");
-                Console.WriteLine($"Starting repacking to Zip: {Path.GetFileName(_zipFileStream.Name)}\n");
+                Console.WriteLine($"Starting repacking to ZIP: {Path.GetFileName(_zipFileStream.Name)}\n");
 
                 try
                 {
-                    PKGtoZip();
+                    PKGtoZIP();
                 }
                 catch (PKGManagerException) //Rethrown converter exception
                 {
@@ -335,14 +335,14 @@ namespace WallpaperEnginePKGManager
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
 
-            //Zip to PKG
+            //ZIP to PKG
             else
             {
-                Console.WriteLine($"Reading Zip: \"{Path.GetFileName(_zipFileStream.Name)}\"");
+                Console.WriteLine($"Reading ZIP: \"{Path.GetFileName(_zipFileStream.Name)}\"");
 
                 try
                 {
-                    CreatePKGInfoFromZip(); //Create PkgInfo from zip
+                    CreatePKGInfoFromZIP(); //Create PKGInfo from zip
                 }
                 catch (PKGManagerException) //Rethrown converter exception
                 {
@@ -354,12 +354,12 @@ namespace WallpaperEnginePKGManager
                 }
 
                 //We write how many files are in the archive and begin packing into a .pkg
-                Console.WriteLine($"Files in Zip: {_pkgInfo.FilesCount}");
+                Console.WriteLine($"Files in ZIP: {_pkgInfo.FilesCount}");
                 Console.WriteLine($"Starting repacking to PKG: \"{_pkgInfo.FilePath}\"\n");
 
                 try
                 {
-                    ZiptoPKG();
+                    ZIPtoPKG();
                 }
                 catch (PKGManagerException) //Rethrown converter exception
                 {
@@ -402,7 +402,7 @@ namespace WallpaperEnginePKGManager
                 if (disposing)
                 {
                     //Release a resources
-                    _zipArchive.Dispose();
+                    _ZIPArchive.Dispose();
                     _zipFileStream.Dispose();
                     _pkgFileStream.Dispose();
                 }

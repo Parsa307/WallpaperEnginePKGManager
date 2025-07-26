@@ -7,14 +7,14 @@ All versions are supported! (Might change in the future)
 ![Preview of Usage](Usage.png)
  
 ## Converting
-**Repacking PKG to Zip!**
-![Preview of Repacking PKG to Zip!](PKGtoZip.png)
+**Repacking PKG to ZIP!**
+![Preview of Repacking PKG to ZIP!](PKGtoZIP.png)
 
 **Repacking result!**
-![Preview of Repacked Zip!](RepackedZip.png)
+![Preview of Repacked ZIP!](RepackedZIP.png)
 
-**And back from Zip to PKG!**
-![Preview of Repacked Zip!](ZiptoPKG.png)
+**And back from ZIP to PKG!**
+![Preview of Repacked ZIP!](ZIPtoPKG.png)
 
 **Easily as never!**
  
