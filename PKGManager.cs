@@ -264,7 +264,7 @@ namespace WallpaperEnginePKGManager
                 string comment = _zipArchive.GetComment(Encoding.UTF8);
                 if (comment != "")
                 {
-                    string findSignature = "│ PKGVersion: ";
+                    string findSignature = "PKGVersion: ";
                     int pkgVersionIndex = comment.IndexOf(findSignature) + findSignature.Length;
                     if (pkgVersionIndex > 0)
                         return comment.Substring(pkgVersionIndex, 8);
