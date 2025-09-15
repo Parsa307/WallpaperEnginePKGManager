@@ -120,6 +120,7 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: ${{ steps.notes.outputs.title }}
           body: ${{ steps.notes.outputs.notes }}
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           files: |
             WallpaperEnginePKGManager_linux_x64.zip
             WallpaperEnginePKGManager_linux_x86.zip
